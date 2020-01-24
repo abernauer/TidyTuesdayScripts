@@ -36,7 +36,8 @@ df <- as_tibble(passwords_tidied)
 df$password <- as.factor(df$password)
 df$time_unit <- as.factor(df$time_unit)
 df$category <- as.factor(df$value)
-
+#set the seed for reproducibile results
+set.seed(385)
 passwordTask <- makeClassifTask(data = df, target = "category")
 
 tree <- makeLearner("classif.rpart")
@@ -44,14 +45,14 @@ tree <- makeLearner("classif.rpart")
 getParamSet(tree)
 
 treeParamSpace <- makeParamSet( 
- makeIntegerParam("minsplit", lower = 5, upper = 20),
- makeIntegerParam("minbucket", lower = 3, upper = 10),
+ makeIntegerParam("minsplit", lower = 5, upper = 8),
+ makeIntegerParam("minbucket", lower = 3, upper = 7),
  makeNumericParam("cp", lower = 0.01, upper = 0.1),
- makeIntegerParam("maxdepth", lower = 3, upper = 10))
+ makeIntegerParam("maxdepth", lower = 3, upper = 7))
 
 #define random search cross validation
-randSearch <- makeTuneControlRandom(maxit = 200)
-cvForTuning <- makeResampleDesc("CV", iters = 5)
+randSearch <- makeTuneControlRandom(maxit = 100)
+cvForTuning <- makeResampleDesc("CV", iters = 3)
 
 # tune the hyperparameters
 parallelStartSocket(cpus = detectCores())
@@ -61,6 +62,7 @@ tunedTreePars <- tuneParams(tree, task = passwordTask,
                             resampling = cvForTuning,
                             par.set = treeParamSpace,
                             control = randSearch)
+parallelStop()
  
-
+tunedTreePars
 

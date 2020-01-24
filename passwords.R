@@ -2,7 +2,8 @@
 library(ggplot2)
 library(dplyr)
 library(mlr)
-
+library(parallel)
+library(parallelMap)
 # read password data set into R
 passwords <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv')
 
@@ -42,4 +43,24 @@ tree <- makeLearner("classif.rpart")
 
 getParamSet(tree)
 
-# makeParamSet()
+treeParamSpace <- makeParamSet( 
+ makeIntegerParam("minsplit", lower = 5, upper = 20),
+ makeIntegerParam("minbucket", lower = 3, upper = 10),
+ makeNumericParam("cp", lower = 0.01, upper = 0.1),
+ makeIntegerParam("maxdepth", lower = 3, upper = 10))
+
+#define random search cross validation
+randSearch <- makeTuneControlRandom(maxit = 200)
+cvForTuning <- makeResampleDesc("CV", iters = 5)
+
+# tune the hyperparameters
+parallelStartSocket(cpus = detectCores())
+
+
+tunedTreePars <- tuneParams(tree, task = passwordTask,
+                            resampling = cvForTuning,
+                            par.set = treeParamSpace,
+                            control = randSearch)
+ 
+
+

@@ -36,13 +36,10 @@ df$password <- as.factor(df$password)
 df$time_unit <- as.factor(df$time_unit)
 df$category <- as.factor(df$value)
 
-category_class <- makeClassifTask(data = df, target = "category")
+passwordTask <- makeClassifTask(data = df, target = "category")
 
-category_class
+tree <- makeLearner("classif.rpart")
 
+getParamSet(tree)
 
-knn <- makeLearner("classif.knn", par.vals = list("k" = 2))
-
-Knnmodel <- train(knn, category_class)
-
-
+# makeParamSet()

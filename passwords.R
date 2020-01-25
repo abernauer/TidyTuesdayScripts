@@ -16,7 +16,7 @@ head(passwords)
 tail(passwords)
 any(is.na(passwords))
 colSums(is.na(passwords))
-#removvs the na's from the tibble 
+#removes the na's from the tibble 
 passwords_tidied <- passwords[1:500, 1:9]
 # confirms we have removed all the nas  
 any(is.na(passwords_tidied))
@@ -49,24 +49,24 @@ df$time_unit <- factor(df$time_unit, levels = time_unit_levels)
 # set the seed for reproducibile results
 set.seed(385)
 # split the data in to training and tests data sets
- trainIndex <- createDataPartition(df$category, times = 1, p = 0.8, list = FALSE)
+trainIndex <- createDataPartition(df$category, times = 1, p = 0.8, list = FALSE)
 
- dfTrain <- df[ trainIndex, ]
- dfTest <- df[-trainIndex, ]
+dfTrain <- df[ trainIndex, ]
+dfTest <- df[-trainIndex, ]
 
- control <- trainControl(method = "repeatedcv",
+control <- trainControl(method = "repeatedcv",
                        number = 3,
                         repeats = 10)
- set.seed(432)
- classificationTree <- train(category ~ .,
+set.seed(432)
+classificationTree <- train(category ~ .,
                             data = dfTrain,
                             method = "rpart",
                            trControl = control)
 
- classificationTree
+classificationTree
 
- plot(classificationTree)
+plot(classificationTree)
 
- predict(classificationTree, newdata = head(dfTest))
+predict(classificationTree, newdata = head(dfTest))
 
 

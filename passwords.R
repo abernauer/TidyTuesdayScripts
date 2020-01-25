@@ -41,9 +41,9 @@ ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
 df <- as_tibble(passwords_tidied)
 df$password <- as.factor(df$password)
 category_levels <- c("name", "cool-macho", "simple-alphanumeric", "fluffy", "sport", "nerdy-pop", "animal", "password-related", "rebellious-rude", "food")
-df$category <- factor(df$category, levels = category_levels)
+df$category <- factor(df$category, levels = category_levels, ordered = TRUE)
 time_unit_levels <- c("years", "months", "weeks", "days", "minutes", "seconds")
-df$time_unit <- factor(df$time_unit, levels = time_unit_levels)
+df$time_unit <- factor(df$time_unit, levels = time_unit_levels, ordered = TRUE)
 
 
 # set the seed for reproducibile results
@@ -61,7 +61,8 @@ set.seed(432)
 classificationTree <- train(category ~ .,
                             data = dfTrain,
                             method = "rpart",
-                           trControl = control)
+                           trControl = control,
+                           na.action = na.omit)
 
 classificationTree
 

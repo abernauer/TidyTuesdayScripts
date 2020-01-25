@@ -35,13 +35,38 @@ ggplot(passwords_tidied, aes(strength, rank, col = category)) +
 ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
   geom_point()
 #covariance heatmap
+
+
+
 df <- as_tibble(passwords_tidied)
 df$password <- as.factor(df$password)
-df$time_unit <- as.factor(df$time_unit)
-df$category <- as.factor(df$value)
+category_levels <- c("name", "cool-macho", "simple-alphanumeric", "fluffy", "sport", "nerdy-pop", "animal", "password-related", "rebellious-rude", "food")
+df$category <- factor(df$category, levels = category_levels)
+time_unit_levels <- c("years", "months", "weeks", "days", "minutes", "seconds")
+df$time_unit <- factor(df$time_unit, levels = time_unit_levels)
 
-#set the seed for reproducibile results
+
+# set the seed for reproducibile results
 set.seed(385)
+# split the data in to training and tests data sets
+ trainIndex <- createDataPartition(df$category, times = 1, p = 0.8, list = FALSE)
 
+ dfTrain <- df[ trainIndex, ]
+ dfTest <- df[-trainIndex, ]
+
+ control <- trainControl(method = "repeatedcv",
+                       number = 3,
+                        repeats = 10)
+ set.seed(432)
+ classificationTree <- train(category ~ .,
+                            data = dfTrain,
+                            method = "rpart",
+                           trControl = control)
+
+ classificationTree
+
+ plot(classificationTree)
+
+ predict(classificationTree, newdata = head(dfTest))
 
 

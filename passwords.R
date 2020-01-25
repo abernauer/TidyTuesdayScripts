@@ -68,6 +68,24 @@ classificationTree
 
 plot(classificationTree)
 
-predict(classificationTree, newdata = head(dfTest))
+classificationTreePredicts <- predict(classificationTree, newdata = dfTest)
+
+table(classificationTreePredicts, dfTest$category[1:88])
+
+set.seed(7)
+
+rForest <- train(category ~.,
+                 data = dfTrain,
+                 method = "ranger",
+                 trControl = control,
+                 na.action = na.omit)
+
+rForest
+
+rForrestPredicts <- predict(rForest, newdata = dfTest)
+
+table(rForrestPredicts, dfTest$category[1:88])
+
+
 
 

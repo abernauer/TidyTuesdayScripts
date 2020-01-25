@@ -1,9 +1,10 @@
 # load in packages for tidy evaluation
 library(ggplot2)
 library(dplyr)
-library(mlr)
-library(parallel)
-library(parallelMap)
+library(rpart)
+library(randomForest)
+library(caret)
+
 # read password data set into R
 passwords <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv')
 
@@ -21,6 +22,7 @@ passwords_tidied <- passwords[1:500, 1:9]
 any(is.na(passwords_tidied))
 
 
+#plot of bar chart of 
 ggplot(passwords_tidied, aes(rank, value, col = category)) +
   geom_point()
 
@@ -32,37 +34,14 @@ ggplot(passwords_tidied, aes(strength, rank, col = category)) +
 
 ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
   geom_point()
+#covariance heatmap
 df <- as_tibble(passwords_tidied)
 df$password <- as.factor(df$password)
 df$time_unit <- as.factor(df$time_unit)
 df$category <- as.factor(df$value)
+
 #set the seed for reproducibile results
 set.seed(385)
-passwordTask <- makeClassifTask(data = df, target = "category")
-
-tree <- makeLearner("classif.rpart")
-
-getParamSet(tree)
-
-treeParamSpace <- makeParamSet( 
- makeIntegerParam("minsplit", lower = 5, upper = 8),
- makeIntegerParam("minbucket", lower = 3, upper = 7),
- makeNumericParam("cp", lower = 0.01, upper = 0.1),
- makeIntegerParam("maxdepth", lower = 3, upper = 7))
-
-#define random search cross validation
-randSearch <- makeTuneControlRandom(maxit = 100)
-cvForTuning <- makeResampleDesc("CV", iters = 3)
-
-# tune the hyperparameters
-parallelStartSocket(cpus = detectCores())
 
 
-tunedTreePars <- tuneParams(tree, task = passwordTask,
-                            resampling = cvForTuning,
-                            par.set = treeParamSpace,
-                            control = randSearch)
-parallelStop()
- 
-tunedTreePars
 

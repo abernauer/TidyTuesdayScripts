@@ -86,6 +86,17 @@ rForrestPredicts <- predict(rForest, newdata = dfTest)
 
 table(rForrestPredicts, dfTest$category[1:88])
 
+set.seed(10)
 
+gbm <- train(category ~.,
+                  data = dfTrain,
+                  method = "gbm",
+                  trControl = control,
+                  na.action = na.omit)
+
+plot(gbm)
+
+gbm_predicts <- predict(gbm, newdata = dfTest)
+table(gbm_predicts, dfTest$category[1:88])
 
 

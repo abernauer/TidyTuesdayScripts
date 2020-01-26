@@ -99,4 +99,7 @@ plot(gbm)
 gbm_predicts <- predict(gbm, newdata = dfTest)
 table(gbm_predicts, dfTest$category[1:88])
 
+library(rpart)
+set.seed(99)
+tree_dt <- rpart(category ~ ., data = dfTrain)
 

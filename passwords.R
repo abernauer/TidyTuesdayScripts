@@ -22,7 +22,7 @@ passwords_tidied <- passwords[1:500, 1:9]
 any(is.na(passwords_tidied))
 
 
-#plot of bar chart of 
+#plots of bar chart of 
 ggplot(passwords_tidied, aes(rank, value, col = category)) +
   geom_point()
 
@@ -99,7 +99,7 @@ plot(gbm)
 gbm_predicts <- predict(gbm, newdata = dfTest)
 table(gbm_predicts, dfTest$category[1:88])
 
-library(rpart)
-set.seed(99)
-tree_dt <- rpart(category ~ ., data = dfTrain)
+
+# set.seed(99)
+# tree_dt <- rpart(category ~ ., data = dfTrain)
 

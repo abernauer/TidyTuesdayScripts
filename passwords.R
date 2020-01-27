@@ -39,6 +39,7 @@ ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
 df <- as_tibble(passwords_tidied)
 scaled_df <- scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE)
 
+# insert a call to cbind in the morning need to construct by columns
 scaled_df$password <- as.factor(df$password)
 category_levels <- c("food", "rebellious-rude", "password-related", "animal", "nerdy-pop", "sport", "fluffy", "simple-alphanumeric", "cool-macho", "name")
 scaled_df$category <- factor(df$category, levels = category_levels, ordered = TRUE)

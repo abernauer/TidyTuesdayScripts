@@ -37,7 +37,7 @@ ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
 #covariance plots to do 
 #Also add preprocessing here 
 df <- as_tibble(passwords_tidied)
-scaled_df <- as.data.frame(scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE))
+scaled_df <- as.data.frame(scale(df[, -c(2, 3, 5), drop = FALSE], center = TRUE, scale = TRUE))
 
 # insert a call to cbind in the morning need to construct by columns
 scaled_df$password <- as.factor(df$password)
@@ -114,11 +114,10 @@ project_plus <- cbind(as.data.frame(project),
                       category = df$category,
                       time_unit = df$time_unit,
                       password = df$password)
-
-# ggplot(project_plus, aes(x = PC1, y = PC2)) +
-#  geom_point(data = as.data.frame(project), color ="darkgrey") +
-#  geom_jitter() +
-#  geom_text(aes(label = password),
-#            hjust = 0, vjust = , size = 3) +
-#  facet_wrap( ~category, ncol = 3)
+set.seed(5)
+ ggplot(project_plus, aes(x = PC1, y = PC2)) +
+  geom_point(data = as.data.frame(project), color ="darkgrey") +
+  geom_point() +
+  geom_text_repel(aes(label = password), point.padding = NA, hjust = 1, segment.size = 0.2, segment.alpha = 0.25) +
+  facet_wrap( ~category, ncol = 2)
 

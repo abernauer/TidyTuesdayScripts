@@ -40,9 +40,10 @@ df <- as_tibble(passwords_tidied)
 scaled_df <- as.data.frame(scale(df[, -c(2, 3, 5), drop = FALSE], center = TRUE, scale = TRUE))
 
 # insert a call to cbind in the morning need to construct by columns
-scaled_df$password <- as.factor(df$password)
+scaled_df_with_cat <- scaled_df
+scaled_df_with_cat$password <- with(scaled_df, as.factor(df$password))
 category_levels <- c("food", "rebellious-rude", "password-related", "animal", "nerdy-pop", "sport", "fluffy", "simple-alphanumeric", "cool-macho", "name")
-scaled_df$category <- factor(df$category, levels = category_levels, ordered = TRUE)
+scaled_df_with_cat$category <- with(scaled_df, factor(df$category, levels = category_levels, ordered = TRUE))
 time_unit_levels <- c("seconds", "minutes", "days", "weeks", "months", "years")
 scaled_df$time_unit <- factor(df$time_unit, levels = time_unit_levels, ordered = TRUE)
 

@@ -103,3 +103,12 @@ table(gbm_predicts, dfTest$category[1:88])
 # set.seed(99)
 # tree_dt <- rpart(category ~ ., data = dfTrain)
 
+scaled <- scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE)
+
+
+ 
+pca <- prcomp(scaled)
+
+project <- predict(pca, scaled) [, 1:2]
+project_plus <- cbind(as.data.frame(project),
+                      category = df$category)

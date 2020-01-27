@@ -34,16 +34,16 @@ ggplot(passwords_tidied, aes(strength, rank, col = category)) +
 
 ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
   geom_point()
-#covariance heatmap
-
-
-
+#covariance plots to do 
+#Also add preprocessing here 
 df <- as_tibble(passwords_tidied)
-df$password <- as.factor(df$password)
+scaled_df <- scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE)
+
+scaled_df$password <- as.factor(df$password)
 category_levels <- c("food", "rebellious-rude", "password-related", "animal", "nerdy-pop", "sport", "fluffy", "simple-alphanumeric", "cool-macho", "name")
-df$category <- factor(df$category, levels = category_levels, ordered = TRUE)
+scaled_df$category <- factor(df$category, levels = category_levels, ordered = TRUE)
 time_unit_levels <- c("seconds", "minutes", "days", "weeks", "months", "years")
-df$time_unit <- factor(df$time_unit, levels = time_unit_levels, ordered = TRUE)
+scaled_df$time_unit <- factor(df$time_unit, levels = time_unit_levels, ordered = TRUE)
 
 
 # set the seed for reproducibile results
@@ -103,13 +103,12 @@ table(gbm_predicts, dfTest$category[1:88])
 # set.seed(99)
 # tree_dt <- rpart(category ~ ., data = dfTrain)
 
-scaled <- scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE)
 
 
  
-pca <- prcomp(scaled)
+pca <- prcomp(scaled_df)
 
-project <- predict(pca, scaled) [, 1:2]
+project <- predict(pca, scaled_df) [, 1:2]
 project_plus <- cbind(as.data.frame(project),
                       category = df$category,
                       time_unit = df$time_unit,

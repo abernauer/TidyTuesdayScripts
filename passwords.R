@@ -40,9 +40,9 @@ ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
 
 df <- as_tibble(passwords_tidied)
 df$password <- as.factor(df$password)
-category_levels <- c("name", "cool-macho", "simple-alphanumeric", "fluffy", "sport", "nerdy-pop", "animal", "password-related", "rebellious-rude", "food")
+category_levels <- c("food", "rebellious-rude", "password-related", "animal", "nerdy-pop", "sport", "fluffy", "simple-alphanumeric", "cool-macho", "name")
 df$category <- factor(df$category, levels = category_levels, ordered = TRUE)
-time_unit_levels <- c("years", "months", "weeks", "days", "minutes", "seconds")
+time_unit_levels <- c("seconds", "minutes", "days", "weeks", "months", "years")
 df$time_unit <- factor(df$time_unit, levels = time_unit_levels, ordered = TRUE)
 
 
@@ -121,3 +121,4 @@ project_plus <- cbind(as.data.frame(project),
 #  geom_text(aes(label = password),
 #            hjust = 0, vjust = , size = 3) +
 #  facet_wrap( ~category, ncol = 3)
+

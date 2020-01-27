@@ -37,7 +37,7 @@ ggplot(passwords_tidied, aes(font_size, strength, col = category)) +
 #covariance plots to do 
 #Also add preprocessing here 
 df <- as_tibble(passwords_tidied)
-scaled_df <- scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE)
+scaled_df <- as.data.frame(scale(df[, -c(2, 3, 5)], center = TRUE, scale = TRUE))
 
 # insert a call to cbind in the morning need to construct by columns
 scaled_df$password <- as.factor(df$password)

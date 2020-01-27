@@ -51,10 +51,10 @@ scaled_df_with_cat$time_unit <- with(scaled_df, factor(df$time_unit, levels = ti
 # set the seed for reproducibile results
 set.seed(385)
 # split the data in to training and tests data sets
-trainIndex <- createDataPartition(df$category, times = 1, p = 0.8, list = FALSE)
+trainIndex <- createDataPartition(scaled_df_with_cat$category, times = 1, p = 0.8, list = FALSE)
 
-dfTrain <- df[ trainIndex, ]
-dfTest <- df[-trainIndex, ]
+dfTrain <- scaled_df_with_cat[trainIndex, ]
+dfTest <- scaled_df_with_cat[-trainIndex, ]
 
 control <- trainControl(method = "repeatedcv",
                        number = 3,

@@ -111,4 +111,13 @@ pca <- prcomp(scaled)
 
 project <- predict(pca, scaled) [, 1:2]
 project_plus <- cbind(as.data.frame(project),
-                      category = df$category)
+                      category = df$category,
+                      time_unit = df$time_unit,
+                      password = df$password)
+
+# ggplot(project_plus, aes(x = PC1, y = PC2)) +
+#  geom_point(data = as.data.frame(project), color ="darkgrey") +
+#  geom_jitter() +
+#  geom_text(aes(label = password),
+#            hjust = 0, vjust = , size = 3) +
+#  facet_wrap( ~category, ncol = 3)

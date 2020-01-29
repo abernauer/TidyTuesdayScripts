@@ -4,6 +4,8 @@ library(dplyr)
 library(rpart)
 library(randomForest)
 library(caret)
+library(FeatureHashing)
+library(xgboost)
 
 # read password data set into R
 passwords <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv')
@@ -123,3 +125,12 @@ set.seed(385)
   facet_wrap( ~category, ncol = 2)
 
 # consider using naiveBayes
+ f <- category ~ rank + password + category + time_unit + offline_crack_sec + rank_alt + strength + font_size
+ 
+hashed_modelMat_train <- hashed.model.matrix(f, data = dfTrain, create.mapping = TRUE)
+hashed_modelMat_test <- hashed.model.matrix(f, data = dfTest, create.mapping = TRUE)
+cv.xgb <- xgboost(hashed_modelMat_train, dfTrain$category, max.depth=7, eta=0.1,
+                  nround = 100)
+p.lm <- predict(cv.xgb, hashed_modelMat_test)
+
+round(p.lm, digits = 1) == as.integer(dfTest$category)

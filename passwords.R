@@ -59,7 +59,7 @@ dfTest <- scaled_df_with_cat[-trainIndex, ]
 control <- trainControl(method = "repeatedcv",
                        number = 3,
                         repeats = 10)
-set.seed(432)
+set.seed(385)
 classificationTree <- train(category ~ .,
                             data = dfTrain,
                             method = "rpart",
@@ -72,9 +72,9 @@ plot(classificationTree)
 
 classificationTreePredicts <- predict(classificationTree, newdata = dfTest)
 
-table(classificationTreePredicts, dfTest$category[1:88])
+table(classificationTreePredicts, dfTest$category[1:86])
 
-set.seed(7)
+set.seed(385)
 
 rForest <- train(category ~.,
                  data = dfTrain,
@@ -86,9 +86,9 @@ rForest
 
 rForrestPredicts <- predict(rForest, newdata = dfTest)
 
-table(rForrestPredicts, dfTest$category[1:88])
+table(rForrestPredicts, dfTest$category[1:86])
 
-set.seed(10)
+set.seed(385)
 
 gbm <- train(category ~.,
                   data = dfTrain,
@@ -105,7 +105,7 @@ table(gbm_predicts, dfTest$category[1:88])
 # set.seed(99)
 # tree_dt <- rpart(category ~ ., data = dfTrain)
 
-
+naive_bayes <- e1071::naiveBayes(category~. , data = dfTrain)
 
  
 pca <- prcomp(scaled_df)
@@ -115,10 +115,11 @@ project_plus <- cbind(as.data.frame(project),
                       category = df$category,
                       time_unit = df$time_unit,
                       password = df$password)
-set.seed(5)
+set.seed(385)
  ggplot(project_plus, aes(x = PC1, y = PC2)) +
   geom_point(data = as.data.frame(project), color ="darkgrey") +
   geom_point() +
   geom_text_repel(aes(label = password), point.padding = NA, hjust = 1, segment.size = 0.2, segment.alpha = 0.25) +
   facet_wrap( ~category, ncol = 2)
 
+# consider using naiveBayes

@@ -134,3 +134,8 @@ cv.xgb <- xgboost(hashed_modelMat_train, dfTrain$category, max.depth=7, eta=0.1,
 p.lm <- predict(cv.xgb, hashed_modelMat_test)
 
 round(p.lm, digits = 1) == as.integer(dfTest$category)
+
+explan <- lime::lime(dfTrain, cv.xgb)
+
+explain(dfTest$category, explan)  
+

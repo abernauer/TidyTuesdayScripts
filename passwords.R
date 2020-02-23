@@ -6,6 +6,8 @@ library(randomForest)
 library(caret)
 library(FeatureHashing)
 library(xgboost)
+library(DALEX)
+
 
 # read password data set into R
 passwords <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv')
@@ -45,6 +47,7 @@ scaled_df <- as.data.frame(scale(df[, -c(2, 3, 5), drop = FALSE], center = TRUE,
 scaled_df_with_cat <- scaled_df
 scaled_df_with_cat$password <- with(scaled_df, as.factor(df$password))
 category_levels <- c("food", "rebellious-rude", "password-related", "animal", "nerdy-pop", "sport", "fluffy", "simple-alphanumeric", "cool-macho", "name")
+# lime doesn't support ordered factors
 scaled_df_with_cat$category <- with(scaled_df, factor(df$category, levels = category_levels, ordered = TRUE))
 time_unit_levels <- c("seconds", "minutes", "days", "weeks", "months", "years")
 scaled_df_with_cat$time_unit <- with(scaled_df, factor(df$time_unit, levels = time_unit_levels, ordered = TRUE))
@@ -74,7 +77,7 @@ plot(classificationTree)
 
 classificationTreePredicts <- predict(classificationTree, newdata = dfTest)
 
-table(classificationTreePredicts, dfTest$category[1:86])
+#table(classificationTreePredicts, dfTest$category[1:86])
 
 set.seed(385)
 
@@ -135,7 +138,10 @@ p.lm <- predict(cv.xgb, hashed_modelMat_test)
 
 round(p.lm, digits = 1) == as.integer(dfTest$category)
 
-explan <- lime::lime(dfTrain, cv.xgb)
 
-explain(dfTest$category, explan)  
+explain_xgboost <- explain(cv.xgb, data = dfTrain[, -8, drop=FALSE], y = as.numeric(dfTrain$category))
+
+#loss <- loss_accuracy(dfTest$category, yhat(cv.xgb, hashed_modelMat_test))
+vi <- variable_importance(explainer = explain_xgboost, loss_function = loss_cross_entropy)
+
 
